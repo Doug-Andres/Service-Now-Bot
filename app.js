@@ -48,11 +48,7 @@ var bot = new builder.UniversalBot(connector, [
 // Create bot and default message handler
 var bot = new builder.UniversalBot(connector, function (session) {
     session.send("Welcome to the RobertHalf project assistant!");
-    session.send('TEST: ' + connector.title);
     session.send("Type: 'help' to get started");
-    //address.user.id 
-
-    session.send(connector.name);
 });
 
 // ServiceNow

@@ -1,8 +1,21 @@
+/*
+    bot.on('contactRelationUpdate', function (message) {
+    if (message.action === 'add') {
+        var name = message.user ? message.user.name : null;
+        var reply = new builder.Message()
+                .address(message.address)
+                .text("Hello %s... Thanks for adding me.", name || 'there');
+        bot.send(reply);
+    }
+}); // https://docs.microsoft.com/en-us/azure/bot-service/nodejs/bot-builder-nodejs-handle-conversation-events?view=azure-bot-service-3.0
+*/
+
 
 var restify = require('restify');
 var builder = require('botbuilder');
-//var request = require('request');
+var request = require('request');
 //var rp = require('request-promise');
+var azure = require('botbuilder-azure'); 
 
 // Setup Restify Server
 var server = restify.createServer();
@@ -10,46 +23,45 @@ server.listen(process.env.port || process.env.PORT || 3978, function () {
    console.log('%s listening to %s', server.name, server.url); 
 });
 
+// Setup db
+var documentDbOptions = {
+    host: 'itpassbot8559', 
+    masterKey: 'riQXCS44SdLgn0g5YFA9CVqlddIJiD6REUE/1ZeLZ02n3/NTZkzxTm1DZ2UvN6vU/ycVetDrMyPBDia7dgIpMA==', 
+    database: 'botdocs',   
+    collection: 'botdata'
+};
+
+var docDbClient = new azure.DocumentDbClient(documentDbOptions);
+
+var cosmosStorage = new azure.AzureBotStorage({ gzipData: false }, docDbClient);
+
+/*
 // Create chat connector for communicating with the Bot Framework Service
 var connector = new builder.ChatConnector({
     appId: 'c43d6db8-fe06-4f37-8f5a-575a0897629f',
     appPassword: '*K]))-.Agxl(VSni'
 });
+*/
+
+// Create chat connector for communicating with the Bot Framework Service
+var connector = new builder.ChatConnector({
+    appId: process.env.MicrosoftAppId,
+    appPassword: process.env.MicrosoftAppPassword
+});
+
 
 // Listen for messages from users 
 server.post('/api/messages', connector.listen());
 
-/*
-// Receive messages from the user and respond by echoing each message back (prefixed with 'You said:')
-var bot = new builder.UniversalBot(connector, [
-    function (session) {
-        session.send("Hello!");
-        builder.Prompts.text(session, " Are you happy? Yes or no?");
-    },
-    function (session, results) {
-        var userResponse = results.response;
-        userResponse = userResponse.toLowerCase();
-        console.log("TEST: ", userResponse);
-
-        if (userResponse == "yes") {
-            session.send("Your answer 1: " + userResponse);
-        } else if (userResponse == 'no') {
-            session.send("Your answer 2: " + userResponse);
-        } else {
-            session.send("You didn't answer the question right.")
-        }
-
-    }
-]);
-*/
-
-
-// Create your bot with a function to receive messages from the user
-// Create bot and default message handler
 var bot = new builder.UniversalBot(connector, function (session) {
     session.send("Welcome to the RobertHalf project assistant!");
+    session.send('TEST: ' + connector.title);
     session.send("Type: 'help' to get started");
-});
+    //address.user.id 
+
+    session.send(connector.name);
+})
+.set('storage', cosmosStorage);
 
 // ServiceNow
 bot.dialog('servicenow', function (session) {
@@ -109,7 +121,7 @@ bot.dialog('taskButtonClick', [
             .then(result => print(result));
         */
 
-        //implement(open_changes).then(result => review(result)).then(result => session.send(result));
+        implement(open_changes).then(result => review(result)).then(result => session.send(result));
 
         //session.send("TASK BUTTON").endDialog();
     }   
@@ -155,7 +167,7 @@ bot.dialog('sharepointButtonClick', [
     }   
 ]).triggerAction({ matches: /(Sharepoint|list)/i });
 
-/******************************************************* 
+/******************************************************* */
 
 function implement(param) {
     console.log('start implement');
@@ -295,4 +307,3 @@ function print(param) {
         resolve(param);
     })
 }
-*/

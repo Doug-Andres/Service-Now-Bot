@@ -15,25 +15,12 @@ var restify = require('restify');
 var builder = require('botbuilder');
 var request = require('request');
 //var rp = require('request-promise');
-var azure = require('botbuilder-azure'); 
 
 // Setup Restify Server
 var server = restify.createServer();
 server.listen(process.env.port || process.env.PORT || 3978, function () {
    console.log('%s listening to %s', server.name, server.url); 
 });
-
-// Setup db
-var documentDbOptions = {
-    host: 'itpassbot8559', 
-    masterKey: 'riQXCS44SdLgn0g5YFA9CVqlddIJiD6REUE/1ZeLZ02n3/NTZkzxTm1DZ2UvN6vU/ycVetDrMyPBDia7dgIpMA==', 
-    database: 'botdocs',   
-    collection: 'botdata'
-};
-
-var docDbClient = new azure.DocumentDbClient(documentDbOptions);
-
-var cosmosStorage = new azure.AzureBotStorage({ gzipData: false }, docDbClient);
 
 /*
 // Create chat connector for communicating with the Bot Framework Service
@@ -55,16 +42,11 @@ server.post('/api/messages', connector.listen());
 
 var bot = new builder.UniversalBot(connector, function (session) {
     session.send("Welcome to the RobertHalf project assistant!");
-    session.send('TEST: ' + connector.title);
     session.send("Type: 'help' to get started");
-    //address.user.id 
-
-    session.send(connector.name);
 })
-.set('storage', cosmosStorage);
 
 // ServiceNow
-bot.dialog('servicenow', function (session) {
+bot.dialog('help', function (session) {
     var msg = new builder.Message(session);
     msg.attachmentLayout(builder.AttachmentLayout.carousel)
     msg.attachments([
@@ -121,7 +103,7 @@ bot.dialog('taskButtonClick', [
             .then(result => print(result));
         */
 
-        implement(open_changes).then(result => review(result)).then(result => session.send(result));
+        //implement(open_changes).then(result => review(result)).then(result => session.send(result));
 
         //session.send("TASK BUTTON").endDialog();
     }   
@@ -167,7 +149,7 @@ bot.dialog('sharepointButtonClick', [
     }   
 ]).triggerAction({ matches: /(Sharepoint|list)/i });
 
-/******************************************************* */
+/******************************************************* 
 
 function implement(param) {
     console.log('start implement');
@@ -307,3 +289,4 @@ function print(param) {
         resolve(param);
     })
 }
+*/

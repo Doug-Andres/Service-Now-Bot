@@ -1,7 +1,7 @@
 
 var restify = require('restify');
 var builder = require('botbuilder');
-var request = require('request');
+//var request = require('request');
 //var rp = require('request-promise');
 
 // Setup Restify Server
@@ -109,7 +109,7 @@ bot.dialog('taskButtonClick', [
             .then(result => print(result));
         */
 
-        implement(open_changes).then(result => review(result)).then(result => session.send(result));
+        //implement(open_changes).then(result => review(result)).then(result => session.send(result));
 
         //session.send("TASK BUTTON").endDialog();
     }   
@@ -155,7 +155,7 @@ bot.dialog('sharepointButtonClick', [
     }   
 ]).triggerAction({ matches: /(Sharepoint|list)/i });
 
-/******************************************************* */
+/******************************************************* 
 
 function implement(param) {
     console.log('start implement');
@@ -295,3 +295,4 @@ function print(param) {
         resolve(param);
     })
 }
+*/

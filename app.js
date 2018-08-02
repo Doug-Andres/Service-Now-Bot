@@ -11,8 +11,8 @@ server.listen(process.env.port || process.env.PORT || 3978, function () {
 });
 
 // Bot Framework Credentials
-process.env.MICROSOFT_APP_ID = "c43d6db8-fe06-4f37-8f5a-575a0897629f";
-process.env.MICROSOFT_APP_PASSWORD = "*K]))-.Agxl(VSni";
+process.env.MICROSOFT_APP_ID = "7b7781a9-0d2c-44ea-b136-a7f97505a4ce";
+process.env.MICROSOFT_APP_PASSWORD = "wjqyTDE99!ogtXBXT854~{#";
 
 // Create chat connector for communicating with the Bot Framework Service
 var connector = new builder.ChatConnector({

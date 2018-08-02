@@ -12,7 +12,7 @@
 
 
 var restify = require('restify');
-//var builder = require('botbuilder');
+var builder = require('botbuilder');
 var request = require('request');
 //var rp = require('request-promise');
 
@@ -93,9 +93,8 @@ bot.dialog('help', function (session) {
 // ServiceNow 'Task' button click function
 bot.dialog('taskButtonClick', [
     function (session, args, next) {
-        var open_changes = [];
-        
         /*
+        var open_changes = [];
         implement(open_changes)
             .then(result => review(result))
             .then(result => buildTaskLink(result))
@@ -105,7 +104,7 @@ bot.dialog('taskButtonClick', [
 
         //implement(open_changes).then(result => review(result)).then(result => session.send(result));
 
-        //session.send("TASK BUTTON").endDialog();
+        session.send("TASK BUTTON").endDialog();
     }   
 ]).triggerAction({ matches: /(Tasks|list)/i });
 

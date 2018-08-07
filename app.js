@@ -376,3 +376,184 @@ bot.dialog('help', function (session) {
     ]);
     session.send(msg).endDialog();
 }).triggerAction({ matches: /^(help|list)/i });
+
+// ServiceNow 'Task' button click function
+bot.dialog('taskButtonClick', [
+    function (session, args, next) {
+        /*
+        var open_changes = [];
+        implement(open_changes)
+            .then(result => review(result))
+            .then(result => buildTaskLink(result))
+            .then(result => task(result))
+            .then(result => print(result));
+        */
+
+        implement(open_changes).then(result => review(result)).then(result => session.send(result));               
+
+        session.send("TASK BUTTON").endDialog();
+    }   
+]).triggerAction({ matches: /(Tasks|list)/i });
+// ServiceNow 'Change' button click function
+bot.dialog('changeButtonClick', [
+    function (session, args, next) {
+        console.log("CHANGE BUTTON");
+        session.send("CHANGE BUTTON").endDialog();
+    }   
+]).triggerAction({ matches: /(Change|list)/i });
+// Planview 'Budget' button click function
+bot.dialog('budgetButtonClick', [
+    function (session, args, next) {
+        console.log("BUDGET BUTTON");
+        session.send("BUDGET BUTTON").endDialog()
+    }   
+]).triggerAction({ matches: /(Budget|list)/i });
+// Planview 'Time' button click function
+bot.dialog('timeButtonClick', [
+    function (session, args, next) {
+        console.log("TIME BUTTON");
+        session.send("TIME BUTTON").endDialog()
+    }   
+]).triggerAction({ matches: /(Time|list)/i });
+// Project Online button click function
+bot.dialog('projectButtonClick', [
+    function (session, args, next) {
+        console.log("PROJECT ONLINE BUTTON");
+        session.send("PROJECT ONLINE BUTTON").endDialog()
+    }   
+]).triggerAction({ matches: /(Project|list)/i });
+// SharePoint button click function
+bot.dialog('sharepointButtonClick', [
+    function (session, args, next) {
+        console.log("SHAREPOINT BUTTON");
+        session.send("SHAREPOINT BUTTON").endDialog()
+    }   
+]).triggerAction({ matches: /(Sharepoint|list)/i });
+/*******************************************************/ 
+function implement(param) {
+    console.log('start implement');
+    var implement_query_url = 'https://dev19152.service-now.com/api/now/table/change_request?sysparm_query=state%3D-1&sysparm_limit=10'; // need to change limit for production **
+    var implement_data = [];
+    var implement_options = {
+        url: implement_query_url,
+        headers: {
+            "Content-Type":"application/json",
+            "Accept":"application/json"
+        },
+        'auth': {
+            'user': 'admin',
+            'pass': '007146972Clyde$d@leRH',
+            'sendImmediately':false
+        }
+    };
+    
+    // Return new promise 
+    return new Promise(function(resolve, reject) {
+        var implement_res = request.get(implement_options, function(err, response, body) { // get changes in implement state
+            if (err) {
+                console.log("ERROR", err);
+                reject(err);
+            } else {
+                implement_data = JSON.parse(body);
+                console.log(body);
+                for (counter = 0; counter < implement_data.result.length; counter++ ) {
+                    param.push(implement_data['result'][counter]['number']);
+                    console.log('IMPLEMENT: ', implement_data['result'][counter]['number']); 
+                    console.log(implement_data);
+                }
+                resolve(param);
+            }
+        }) 
+    })
+}
+function review(param) {
+    var review_query_url = 'https://dev19152.service-now.com/api/now/table/change_request?sysparm_query=state%3D0&sysparm_limit=10' // need to change limit for production **
+    var review_data = [];
+    var review_options = {
+        url: review_query_url,
+        headers: {
+            "Content-Type":"application/json",
+            "Accept":"application/json"
+        },
+        'auth': {
+            'user': 'admin',
+            'pass': '007146972Clyde$d@leRH',
+            'sendImmediately':false
+        }
+    };
+    
+    // Return new promise 
+    return new Promise(function(resolve, reject) {
+        var review_res = request.get(review_options, function(err, response, body) { // get changes in review state
+            if (err) {
+                reject(err);
+            } else {
+                review_data = JSON.parse(body);
+                for (counter = 0; counter < review_data.result.length; counter++ ) {
+                    param.push(review_data['result'][counter]['number']);
+                    console.log('review: ', review_data['result'][counter]['number']); 
+                }
+                resolve(param);
+            }
+        }) 
+    })
+}
+function buildTaskLink(param) {
+    var task_query_url_1 = 'https://dev19152.service-now.com/api/now/table/change_task?sysparm_query=number%3D';
+    var task_query_url_2 = '&sysparm_limit=10'; // need to change limit for production
+    var task_query_url;
+    var complete_links = [];
+    // param[counter]
+    // 'CHG0030001'
+    return new Promise(function(resolve, reject) {
+        for (counter = 0; counter < param.length; counter++ ) {
+            task_query_url = task_query_url_1 + param[counter] + task_query_url_2;
+            console.log('LINK: ' + counter + ' - ' + task_query_url);
+            complete_links.push(task_query_url);
+        }
+        resolve(complete_links);
+    })
+}
+function task(param) { // PROBLEM IS IN THE TASK FUNCTION
+    var task_data = [];
+    var task_json;
+    return new Promise(function(resolve, reject) {
+        for (counter = 0; counter < param.length; counter++ ) {
+            var options = {
+                uri: param[counter],
+                headers: {
+                    'User-Agent': 'Request-Promise',
+                    "Content-Type":"application/json",
+                    "Accept":"application/json"
+                },
+                'auth': {
+                    'user': 'admin',
+                    'pass': '007146972Clyde$d@leRH',
+                    'sendImmediately':false
+                },
+                json: true // Automatically parses the JSON string in the response
+            };
+            rp(options)
+                .then(function (repos) {
+                    //console.log(repos['result'][counter]['number']);
+                    console.log(repos['result'][0]);
+                    task_data.push(repos['result'][0]); 
+                })
+                .catch(function (err) {
+                    console.log('No Task');
+                })
+        }
+        resolve(task_data);
+    })
+}
+function print(param) {
+    return new Promise(function(resolve, reject) {
+        console.log('Print Function');
+        for (counter = 0; counter < param.length; counter++ ) {
+            var data = JSON.parse(param[counter]);
+            session.send('PARAM: '+ counter, ' ', data['result'][counter]);
+            console.log('PARAM: '+ counter, ' ', data['result'][counter]); 
+        }
+        resolve(param);
+    })
+}

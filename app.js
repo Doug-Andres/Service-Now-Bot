@@ -327,6 +327,52 @@ var connector = new builder.ChatConnector({
 server.post('/api/messages', connector.listen());
 
 var bot = new builder.UniversalBot(connector, function (session) {
-     session.send("You said: %s", session.message.text);
+     session.send("Welcome to the RobertHalf project assistant!");
+     session.send("Type: 'help' to get started");
 })
 .set('storage', cosmosStorage);
+
+// ServiceNow
+bot.dialog('help', function (session) {
+    var msg = new builder.Message(session);
+    msg.attachmentLayout(builder.AttachmentLayout.carousel)
+    msg.attachments([
+        new builder.HeroCard(session)
+            .title("ServiceNow")
+            .subtitle("Pull all sorts of useful project data from ServiceNow.")
+            .text("You can pull project specific data like the changes and tasks that you are assigned to.")
+            .images([builder.CardImage.create(session, 'https://prdimpblob.blob.core.windows.net/partners/RES/solutions/images/servicenow.png')])
+            .buttons([
+                builder.CardAction.imBack(session, "Finding tasks...", "Tasks"),
+                builder.CardAction.imBack(session, "Finding my changes...", "Changes"),
+            ]),
+        new builder.HeroCard(session)
+            .title("Planview")
+            .subtitle("Pull all sorts of useful project data from Planview.")
+            .text("You can pull project specific data like budget metrics and time information.")
+            .images([builder.CardImage.create(session, 'https://www.planview.com/wp-content/themes/planview-wp-theme/img/planview-logo-social-media-400x400.jpg')])
+            .buttons([
+                builder.CardAction.imBack(session, "Find my budget metrics", "Budget Metrics"),
+                builder.CardAction.imBack(session, "Find my time information", "Time"),
+            ]),
+        new builder.HeroCard(session)
+            .title("Project Online")
+            .subtitle("Pull all sorts of useful project data from Project Online.")
+            .text("You can pull project specific data like ...")
+            .images([builder.CardImage.create(session, 'https://tvt.gallerycdn.vsassets.io/extensions/tvt/tvt-pjo/1.1.10/1486158998669/img/logo.png')])
+            .buttons([
+                builder.CardAction.imBack(session, "Find my project online info", "Project Online"),
+            ]),
+        new builder.HeroCard(session)
+            .title("SharePoint")
+            .subtitle("Pull all sorts of useful project data from SharePoint.")
+            .text("You can pull project specific data like ...")
+            .images([builder.CardImage.create(session, 'https://tigerware.lsu.edu/image/506741ef-e6b9-4f42-83b4-198ccc24d94f.png?preset=Full')])
+            .buttons([
+                builder.CardAction.imBack(session, "Find my SharePoint info", "SharePoint"),
+            ])
+            
+
+    ]);
+    session.send(msg).endDialog();
+}).triggerAction({ matches: /^(help|list)/i });

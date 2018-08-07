@@ -295,6 +295,7 @@ function print(param) {
 var azure = require('botbuilder-azure'); 
 var restify = require('restify');
 var builder = require('botbuilder');
+var request = require('request');
 
 var documentDbOptions = {
     host: 'https://dou.documents.azure.com:443/', 

@@ -301,10 +301,14 @@ server.listen(process.env.port || process.env.PORT || 3978, function () {
    console.log('%s listening to %s', server.name, server.url); 
 });
 
+// Bot Framework Credentials
+process.env.MICROSOFT_APP_ID = "c43d6db8-fe06-4f37-8f5a-575a0897629f";
+process.env.MICROSOFT_APP_PASSWORD = "*K]))-.Agxl(VSni";
+
 // Create chat connector for communicating with the Bot Framework Service
 var connector = new builder.ChatConnector({
-    appId: 'c43d6db8-fe06-4f37-8f5a-575a0897629f',
-    appPassword: '*K]))-.Agxl(VSni'
+    appId: process.env.MICROSOFT_APP_ID,
+    appPassword: process.env.MICROSOFT_APP_PASSWORD
 });
 
 // Listen for messages from users 

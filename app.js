@@ -381,8 +381,9 @@ bot.dialog('help', function (session) {
 // ServiceNow 'Task' button click function
 bot.dialog('taskButtonClick', [
     function (session, args, next) {
-        /*
+        
         var open_changes = [];
+        /*
         implement(open_changes)
             .then(result => review(result))
             .then(result => buildTaskLink(result))

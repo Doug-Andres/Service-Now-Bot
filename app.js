@@ -292,8 +292,20 @@ function print(param) {
 }
 */
 
+var azure = require('botbuilder-azure'); 
 var restify = require('restify');
 var builder = require('botbuilder');
+
+var documentDbOptions = {
+    host: 'https://dou.documents.azure.com:443/', 
+    masterKey: 'Vg9bLvI5pXhI69QKzhrGnKsUeKLOuSDXajjtTEU7vfRhewiD30fuDxwRDed907UXaDyVqc6Xi4HuIiCnoPmQaQ==', 
+    database: 'botdocs',   
+    collection: 'botdata'
+};
+
+var docDbClient = new azure.DocumentDbClient(documentDbOptions);
+
+var cosmosStorage = new azure.AzureBotStorage({ gzipData: false }, docDbClient);
 
 // Setup Restify Server
 var server = restify.createServer();
@@ -314,7 +326,7 @@ var connector = new builder.ChatConnector({
 // Listen for messages from users 
 server.post('/api/messages', connector.listen());
 
-// Receive messages from the user and respond by echoing each message back (prefixed with 'You said:')
 var bot = new builder.UniversalBot(connector, function (session) {
-    session.send("You said: %s", session.message.text);
-});
+     session.send("You said: %s", session.message.text);
+})
+.set('storage', cosmosStorage);

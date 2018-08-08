@@ -328,6 +328,7 @@ var connector = new builder.ChatConnector({
 server.post('/api/messages', connector.listen());
 
 var bot = new builder.UniversalBot(connector, function (session) {
+     session.send(connector.name);
      session.send("Welcome to the RobertHalf project assistant!");
      session.send("Type: 'help' to get started");
 })
@@ -381,7 +382,7 @@ bot.dialog('help', function (session) {
 // ServiceNow 'Task' button click function
 bot.dialog('taskButtonClick', [
     function (session, args, next) {
-        
+        session.send("TASK BUTTON").endDialog();
         var open_changes = [];
         /*
         implement(open_changes)
@@ -392,8 +393,6 @@ bot.dialog('taskButtonClick', [
         */
 
         implement(open_changes).then(result => review(result)).then(result => session.send(result));               
-
-        session.send("TASK BUTTON").endDialog();
     }   
 ]).triggerAction({ matches: /(Tasks|list)/i });
 // ServiceNow 'Change' button click function

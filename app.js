@@ -327,6 +327,13 @@ var connector = new builder.ChatConnector({
 // Listen for messages from users 
 server.post('/api/messages', connector.listen());
 
+var bot = new builder.UniversalBot(connector, function (session) {
+     session.send(connector.name);
+     session.send("Welcome to the RobertHalf project assistant!");
+     session.send("Type: 'help' to get started");
+})
+.set('storage', cosmosStorage);
+
 bot.on('contactRelationUpdate', function (message) {
     if (message.action === 'add') {
         var name = message.user ? message.user.name : null;
@@ -336,13 +343,6 @@ bot.on('contactRelationUpdate', function (message) {
         bot.send(reply);
     }
 });
-
-var bot = new builder.UniversalBot(connector, function (session) {
-     session.send(connector.name);
-     session.send("Welcome to the RobertHalf project assistant!");
-     session.send("Type: 'help' to get started");
-})
-.set('storage', cosmosStorage);
 
 /*
 bot.on('conversationUpdate', function (message) {

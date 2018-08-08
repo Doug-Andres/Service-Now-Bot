@@ -328,13 +328,13 @@ var connector = new builder.ChatConnector({
 server.post('/api/messages', connector.listen());
 
 var bot = new builder.UniversalBot(connector, function (session) {
-     session.send(connector.name);
      session.send("Welcome to the RobertHalf project assistant!");
      session.send("Type: 'help' to get started");
     
-     var name = message.user ? message.user.name : null;
-     var reply = new builder.Message().address(message.address).text("Hello %s... !", name || 'there');
-     session.send(reply);
+     var user = message.user; 
+     var name = message.user.name;
+     session.send("User " + user);
+     session.send("Name " + name);
 })
 .set('storage', cosmosStorage);
 

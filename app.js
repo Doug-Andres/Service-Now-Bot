@@ -334,41 +334,22 @@ var bot = new builder.UniversalBot(connector, function (session) {
 })
 .set('storage', cosmosStorage);
 
-bot.on('contactRelationUpdate', function (message) {
-    if (message.action === 'add') {
+
+bot.on('conversationUpdate', function (message) {
+    if (message.membersAdded && message.membersAdded.length > 0) {
         var name = message.user ? message.user.name : null;
         var reply = new builder.Message()
                 .address(message.address)
-                .text("Hello %s... Thanks for adding me.", name || 'there');
-        bot.send(reply);
-    }
-});
-
-/*
-bot.on('conversationUpdate', function (message) {
-    if (message.membersAdded && message.membersAdded.length > 0) {
-        // Say hello
-        var isGroup = message.address.conversation.isGroup;
-        var txt = isGroup ? "Hello everyone!" : "Hello...";
-        var reply = new builder.Message()
-                .address(message.address)
-                .text(txt);
+                .text("Hello %s... !", name || 'there');
         bot.send(reply);
     } else if (message.membersRemoved) {
-        // See if bot was removed
-        var botId = message.address.bot.id;
-        for (var i = 0; i < message.membersRemoved.length; i++) {
-            if (message.membersRemoved[i].id === botId) {
-                // Say goodbye
-                var reply = new builder.Message()
-                        .address(message.address)
-                        .text("Goodbye");
-                bot.send(reply);
-                break;
-            }
-        }
+        var name = message.user ? message.user.name : null;
+        var reply = new builder.Message()
+                .address(message.address)
+                .text("Goodbye %s... !", name || 'there');
+        bot.send(reply);
     }
-}); */
+}); 
 
 // ServiceNow
 bot.dialog('help', function (session) {

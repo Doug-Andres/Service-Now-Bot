@@ -330,11 +330,6 @@ server.post('/api/messages', connector.listen());
 var bot = new builder.UniversalBot(connector, function (session) {
      session.send("Welcome to the RobertHalf project assistant!");
      session.send("Type: 'help' to get started");
-    
-     var user = message.user; 
-     var name = message.user.name;
-     session.send("User " + user);
-     session.send("Name " + name);
 })
 .set('storage', cosmosStorage);
 

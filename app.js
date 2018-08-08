@@ -331,10 +331,14 @@ var bot = new builder.UniversalBot(connector, function (session) {
      session.send(connector.name);
      session.send("Welcome to the RobertHalf project assistant!");
      session.send("Type: 'help' to get started");
+    
+     var name = message.user ? message.user.name : null;
+     var reply = new builder.Message().address(message.address).text("Hello %s... !", name || 'there');
+     session.send(reply);
 })
 .set('storage', cosmosStorage);
 
-
+/*
 bot.on('conversationUpdate', function (message) {
     if (message.membersAdded && message.membersAdded.length > 0) {
         var name = message.user ? message.user.name : null;
@@ -350,6 +354,7 @@ bot.on('conversationUpdate', function (message) {
         bot.send(reply);
     }
 }); 
+*/
 
 // ServiceNow
 bot.dialog('help', function (session) {

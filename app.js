@@ -327,6 +327,16 @@ var connector = new builder.ChatConnector({
 // Listen for messages from users 
 server.post('/api/messages', connector.listen());
 
+bot.on('contactRelationUpdate', function (message) {
+    if (message.action === 'add') {
+        var name = message.user ? message.user.name : null;
+        var reply = new builder.Message()
+                .address(message.address)
+                .text("Hello %s... Thanks for adding me.", name || 'there');
+        bot.send(reply);
+    }
+});
+
 var bot = new builder.UniversalBot(connector, function (session) {
      session.send(connector.name);
      session.send("Welcome to the RobertHalf project assistant!");
@@ -334,6 +344,7 @@ var bot = new builder.UniversalBot(connector, function (session) {
 })
 .set('storage', cosmosStorage);
 
+/*
 bot.on('conversationUpdate', function (message) {
     if (message.membersAdded && message.membersAdded.length > 0) {
         // Say hello
@@ -357,7 +368,7 @@ bot.on('conversationUpdate', function (message) {
             }
         }
     }
-});
+}); */
 
 // ServiceNow
 bot.dialog('help', function (session) {
